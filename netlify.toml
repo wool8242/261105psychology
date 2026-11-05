@@ -1,0 +1,14 @@
+# Netlify 배포 설정
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Node 버전을 고정해 빌드 환경 차이로 인한 오류를 막습니다.
+[build.environment]
+  NODE_VERSION = "22"
+
+# SPA 라우팅: 새로고침해도 모든 경로가 index.html로 연결되도록 합니다.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
