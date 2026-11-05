@@ -60,13 +60,18 @@ git push -u origin main
 - 내용을 바꾼 뒤에는 제목·본문의 `[샘플]` 표시를 지우세요.
 - `src/pages/About.tsx`의 교수 소개(이름, 소속, 이메일)도 실제 정보로 바꿉니다.
 
-## 5. 다음 단계: Firebase 연동 (Spark 무료 요금제)
+## 5. Firebase 설정 (연동 완료 후 해야 할 일)
 
-- **바꿀 파일**: `src/services/contentService.ts` 하나입니다. `getContents`, `getContentById`를 Firestore 호출로 교체하면 페이지 코드는 그대로 동작합니다.
-- **추가할 것**
-  1. `npm install firebase`, Firebase 콘솔에서 프로젝트 생성 후 `.env`에 `VITE_FIREBASE_*` 4개 값 입력 (Netlify 환경변수에도 동일하게 등록)
-  2. Firestore 컬렉션 `contents` (필드는 `src/types/content.ts`와 동일)
-  3. 구글 로그인 (Authentication) 및 `/admin` 페이지 구현
-  4. 관리자 이메일 판별 (허용한 교수님 이메일만 쓰기 가능)
-  5. 보안 규칙: 누구나 `published == true`인 글 읽기, 쓰기는 관리자 이메일만 허용
-- Cloud Functions, Cloud Storage 등 유료 기능은 쓰지 않습니다. 자료는 외부 링크로 연결합니다.
+코드는 이미 Firestore(컬렉션 `contents`)와 구글 로그인에 연결되어 있습니다. 아래를 순서대로 하세요.
+
+1. **관리자 이메일 등록**
+   - `.env`의 `VITE_ADMIN_EMAILS=` 뒤에 관리자 구글 이메일을 적습니다. (Netlify 환경변수에도 같은 이름으로 등록)
+2. **보안 규칙 게시**
+   - `firestore.rules` 파일의 `관리자이메일@gmail.com`을 본인 이메일로 바꿉니다.
+   - Firebase 콘솔 → Firestore Database → 규칙 탭에 파일 내용을 붙여넣고 **게시**합니다.
+   - 방문자는 공개(`published: true`) 글만 읽을 수 있고, 쓰기는 관리자 이메일만 가능합니다.
+3. **Netlify 환경변수** 5개(`VITE_FIREBASE_*` 4개 + `VITE_ADMIN_EMAILS`)를 등록한 뒤 다시 배포합니다.
+4. 사이트의 `/admin`에서 구글 로그인 → **샘플 글 불러오기**(처음 한 번) 또는 **새 글 쓰기**로 글을 등록합니다.
+
+참고: 화면 표시용 관리자 확인(`VITE_ADMIN_EMAILS`)은 편의 기능이고, 실제 보호는 보안 규칙이 합니다. 두 곳의 이메일을 같게 맞춰 주세요.
+Cloud Functions, Cloud Storage 등 유료 기능은 쓰지 않으며, 자료는 외부 링크로 연결합니다.
