@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import ContentGrid from '../components/ContentGrid'
 import SearchBar from '../components/SearchBar'
+import PageHeader from '../components/PageHeader'
 import StatusMessage from '../components/StatusMessage'
 import { useAsync } from '../hooks/useAsync'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -26,12 +27,11 @@ export default function ParentingList() {
     [category, keyword],
   )
 
-  const tab = (active: boolean) =>
-    `px-4 py-2 rounded-full border font-medium ${active ? 'bg-brand-700 text-white border-brand-700' : 'bg-white text-brand-800 border-brand-600 hover:bg-brand-50'}`
+  const tab = (active: boolean) => `pill ${active ? 'pill-on' : 'pill-off'}`
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">부모교육</h1>
+      <PageHeader title="부모교육" subtitle="시기별로 골라 읽고, 키워드로 검색해 보세요." />
       <SearchBar value={keyword} onChange={(v) => update('q', v)} />
       <div role="group" aria-label="시기별 필터" className="flex flex-wrap gap-2">
         <button type="button" className={tab(!category)} aria-pressed={!category} onClick={() => update('category', '')}>전체</button>

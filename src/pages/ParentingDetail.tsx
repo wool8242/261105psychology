@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import StatusMessage from '../components/StatusMessage'
 import { useAsync } from '../hooks/useAsync'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { getCategoryStyle } from '../components/categoryStyle'
 import { getContentById } from '../services/contentService'
 
 // 유튜브 주소에서 영상 id를 뽑아 개인정보 보호 도메인(youtube-nocookie.com) 임베드 주소로 만듭니다.
@@ -40,14 +41,14 @@ export default function ParentingDetail() {
 
   return (
     <div>
-      <Link to="/parenting" className="text-brand-700 underline">← 목록으로</Link>
+      <Link to="/parenting" className="font-semibold text-brand-700 underline underline-offset-4">← 목록으로</Link>
       <StatusMessage loading={loading} error={error} empty={!data} emptyText="요청하신 글을 찾을 수 없습니다.">
         {data && (
-          <article className="mt-4 space-y-6">
+          <article className="mt-4 space-y-6 rounded-3xl border border-brand-100 bg-white p-5 shadow-soft sm:p-10">
             <header className="space-y-2">
-              <span className="text-sm bg-brand-100 text-brand-800 rounded-full px-3 py-1">{data.category}</span>
-              <h1 className="text-2xl sm:text-3xl font-bold">{data.title}</h1>
-              <p className="text-lg text-gray-700">{data.summary}</p>
+              <span className={`inline-block text-sm font-medium rounded-full px-3 py-1 ${getCategoryStyle(data.category).chip}`}>{data.category}</span>
+              <h1 className="text-2xl sm:text-4xl font-bold leading-snug text-brand-900">{data.title}</h1>
+              <p className="rounded-xl bg-peach-50 border-l-4 border-peach-400 px-4 py-3 text-lg text-gray-800">{data.summary}</p>
               <p className="text-sm text-gray-600">{data.createdAt}</p>
             </header>
 
@@ -56,7 +57,7 @@ export default function ParentingDetail() {
                 <iframe
                   src={embed}
                   title={`${data.title} 영상`}
-                  className="w-full h-full rounded-xl"
+                  className="w-full h-full rounded-2xl shadow-soft"
                   allow="encrypted-media; picture-in-picture"
                   allowFullScreen
                 />
@@ -68,11 +69,11 @@ export default function ParentingDetail() {
 
             <div className="flex flex-wrap gap-3">
               {data.linkUrl && (
-                <a href={data.linkUrl} target="_blank" rel="noopener noreferrer" className="bg-brand-700 text-white rounded-lg px-5 py-3 font-medium hover:bg-brand-800">
+                <a href={data.linkUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
                   자료 보기 (새 창)
                 </a>
               )}
-              <button type="button" onClick={copyLink} className="border border-brand-600 text-brand-800 rounded-lg px-5 py-3 font-medium bg-white hover:bg-brand-50">
+              <button type="button" onClick={copyLink} className="btn-outline">
                 {copied ? '주소를 복사했어요' : '이 글 주소 복사'}
               </button>
             </div>

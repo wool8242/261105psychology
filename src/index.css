@@ -4,8 +4,23 @@
 
 /* 학부모가 스마트폰으로 읽기 편하도록 본문 17px, 넉넉한 줄 간격 */
 @layer base {
-  html { font-size: 17px; }
-  body { @apply bg-cream text-ink font-sans leading-relaxed; }
+  html { font-size: 17px; scroll-behavior: smooth; }
+  body { word-break: keep-all; @apply bg-cream text-ink font-sans leading-relaxed antialiased; }
+  h1, h2 { @apply font-serif; }
   /* 키보드 탐색 시 현재 위치가 잘 보이도록 */
   :focus-visible { @apply outline outline-[3px] outline-offset-2 outline-brand-600; }
+}
+
+@layer components {
+  .btn-primary { @apply inline-flex items-center justify-center gap-2 bg-brand-700 text-white font-semibold rounded-full px-6 py-3 shadow-soft transition hover:bg-brand-800 hover:shadow-lift; }
+  .btn-outline { @apply inline-flex items-center justify-center gap-2 bg-white text-brand-800 font-semibold rounded-full px-6 py-3 border-2 border-brand-600 transition hover:bg-brand-50; }
+  .pill { @apply px-4 py-2 rounded-full border-2 font-medium transition; }
+  .pill-on { @apply bg-brand-700 text-white border-brand-700 shadow-soft; }
+  .pill-off { @apply bg-white text-brand-800 border-brand-200 hover:border-brand-600 hover:bg-brand-50; }
+}
+
+/* 움직임을 줄이고 싶은 사용자 설정을 존중 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
 }

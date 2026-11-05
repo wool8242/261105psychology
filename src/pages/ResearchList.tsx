@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ContentGrid from '../components/ContentGrid'
+import PageHeader from '../components/PageHeader'
 import StatusMessage from '../components/StatusMessage'
 import { useAsync } from '../hooks/useAsync'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -18,12 +19,11 @@ export default function ResearchList() {
   }, [])
 
   const items = (data ?? []).filter((c) => !kind || c.category === kind)
-  const tab = (active: boolean) =>
-    `px-4 py-2 rounded-full border font-medium ${active ? 'bg-brand-700 text-white border-brand-700' : 'bg-white text-brand-800 border-brand-600 hover:bg-brand-50'}`
+  const tab = (active: boolean) => `pill ${active ? 'pill-on' : 'pill-off'}`
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">연구·수업 자료</h1>
+      <PageHeader title="연구·수업 자료" subtitle="논문, 발표자료, 수업자료를 유형별로 모았습니다." />
       <div role="group" aria-label="자료 유형 필터" className="flex flex-wrap gap-2">
         <button type="button" className={tab(!kind)} aria-pressed={!kind} onClick={() => setKind('')}>전체</button>
         {kinds.map((k) => (
