@@ -11,6 +11,7 @@ export default function Footer() {
         <nav aria-label="바닥 메뉴">
           <ul className="space-y-1 text-sm">
             <li><Link to="/parenting" className="underline-offset-4 hover:underline">부모교육</Link></li>
+            <li><Link to="/board" className="underline-offset-4 hover:underline">게시판</Link></li>
             <li><Link to="/research" className="underline-offset-4 hover:underline">연구·수업 자료</Link></li>
             <li><Link to="/about" className="underline-offset-4 hover:underline">교수 소개</Link></li>
             <li><Link to="/admin" className="underline-offset-4 hover:underline">관리자</Link></li>

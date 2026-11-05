@@ -7,6 +7,8 @@ import ParentingDetail from './pages/ParentingDetail'
 import ResearchList from './pages/ResearchList'
 import About from './pages/About'
 // 관리자 화면은 필요할 때만 내려받아, 일반 방문자의 로딩을 가볍게 합니다.
+const BoardList = lazy(() => import('./pages/BoardList'))
+const BoardDetail = lazy(() => import('./pages/BoardDetail'))
 const Admin = lazy(() => import('./pages/Admin'))
 import NotFound from './pages/NotFound'
 
@@ -19,6 +21,8 @@ export default function App() {
         <Route path="/parenting/:id" element={<ParentingDetail />} />
         <Route path="/research" element={<ResearchList />} />
         <Route path="/about" element={<About />} />
+        <Route path="/board" element={<Suspense fallback={<p role="status">불러오는 중입니다…</p>}><BoardList /></Suspense>} />
+        <Route path="/board/:id" element={<Suspense fallback={<p role="status">불러오는 중입니다…</p>}><BoardDetail /></Suspense>} />
         <Route path="/admin" element={<Suspense fallback={<p role="status">불러오는 중입니다…</p>}><Admin /></Suspense>} />
         <Route path="*" element={<NotFound />} />
       </Route>

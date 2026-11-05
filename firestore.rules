@@ -1,18 +1,54 @@
 // Firebase 콘솔 → Firestore Database → 규칙 탭에 붙여넣고 "게시"를 누르세요.
-// 아래 관리자 이메일을 본인 구글 이메일로 바꿔야 합니다.
+// 아래 관리자 이메일(한 곳)을 본인 구글 이메일로 바꿔야 합니다.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // 로그인(이메일 인증 완료)한 사용자
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    // 관리자: 허용 목록의 이메일
     function isAdmin() {
-      return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email in ['관리자이메일@gmail.com'];
+      return isSignedIn() && request.auth.token.email in ['관리자이메일@gmail.com'];
+    }
+    // 글·댓글 공통 검사: 허용된 필드만, 작성자는 본인, 시간은 서버 시각, 길이 제한
+    function validAuthor(d) {
+      return d.authorUid == request.auth.uid
+        && d.authorName is string && d.authorName.size() > 0 && d.authorName.size() <= 20
+        && d.createdAt == request.time;
     }
 
+    // 부모교육·연구 콘텐츠: 방문자는 공개 글만 읽기, 쓰기는 관리자만
     match /contents/{id} {
-      // 방문자: 공개(published == true)된 글만 읽기. 관리자: 모두 읽기/쓰기
       allow read: if resource.data.published == true || isAdmin();
       allow write: if isAdmin();
+    }
+
+    // 게시판 글: 누구나 읽기, 로그인한 사람만 작성, 본인 또는 관리자만 삭제 (수정은 불가)
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && request.resource.data.keys().hasOnly(['title', 'body', 'authorUid', 'authorName', 'createdAt'])
+        && validAuthor(request.resource.data)
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 100
+        && request.resource.data.body is string
+        && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
+      allow update: if false;
+      allow delete: if isSignedIn() && (resource.data.authorUid == request.auth.uid || isAdmin());
+
+      // 댓글
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if isSignedIn()
+          && request.resource.data.keys().hasOnly(['body', 'authorUid', 'authorName', 'createdAt'])
+          && validAuthor(request.resource.data)
+          && request.resource.data.body is string
+          && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 1000;
+        allow update: if false;
+        allow delete: if isSignedIn() && (resource.data.authorUid == request.auth.uid || isAdmin());
+      }
     }
   }
 }

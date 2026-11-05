@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 
 const links = [
   { to: '/parenting', label: '부모교육' },
+  { to: '/board', label: '게시판' },
   { to: '/research', label: '연구·수업 자료' },
   { to: '/about', label: '교수 소개' },
 ]
