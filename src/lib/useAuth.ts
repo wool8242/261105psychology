@@ -18,8 +18,10 @@ export function useAuth() {
     setError(null)
     try {
       await signInWithPopup(auth, new GoogleAuthProvider())
-    } catch {
-      setError('로그인하지 못했습니다. 팝업 차단을 풀고 다시 시도해 주세요.')
+    } catch (e) {
+      // 원인을 알 수 있도록 Firebase 오류 코드를 함께 보여 줍니다 (예: auth/unauthorized-domain)
+      const code = (e as { code?: string }).code ?? 'unknown'
+      setError(`로그인하지 못했습니다. 팝업 차단을 풀고 다시 시도해 주세요. (오류 코드: ${code})`)
     }
   }
   const isAdmin = !!user?.email && adminEmails.includes(user.email.toLowerCase())
